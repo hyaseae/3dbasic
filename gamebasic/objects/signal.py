@@ -12,10 +12,17 @@ class SignalType(Enum):
     FUNCTION = auto()
     BOOL = auto()
 
+class FormalSignals(Enum):
+    """
+    some formal signals to make smart filling work.
+    """
+    EXIT_GAME = "EXIT_SIGNAL"
+
 class Signal():
     """
     signals idead by godot engine.
     """
+    signal_count = 0
     def __init__(self) -> None:
         self.type:SignalType = SignalType.NONE
         self.data: int|float|str|bool|None = None
@@ -57,3 +64,18 @@ class Signal():
         get signal's name
         """
         return self.name
+
+    def set_signal_name(self, name):
+        """
+        sets signal's name
+        """
+        self.name = name
+        return
+
+    @classmethod
+    def get_signal_count(cls) -> int:
+        """
+        get signal count that autoincements after getting one.
+        """
+        cls.signal_count += 1
+        return cls.signal_count
