@@ -1,8 +1,14 @@
 import pygame
-from threeDbasic.base.vector import vector3, angle_diff, e3, rotation_throuh_axis, dot
+from threeDbasic.math.vector import vector3, angle_diff, e3, rotation_throuh_axis, dot
 from threeDbasic.base.inrange import inrange
-from threeDbasic.base.faces import face
+from threeDbasic.base.faces import face, faces
 from math import pi, tan
+from enum import Enum, auto
+
+class CameraProjectionMode(Enum):
+    ORTHOGRAPHIC = auto()
+    PERSPECTIVE = auto()
+
 
 
 class Camera3D():
@@ -22,6 +28,8 @@ class Camera3D():
         self.vertical_angle:float = vertical_angle
         self.normal_vector:vector3 = normal_vector
         self.binomial_vector:vector3 = binomial_vector
+        self.mode = CameraProjectionMode.ORTHOGRAPHIC
+        self.view_plane = "plane"
 
     def move_to_absloute_pos(self, x:float, y:float, z:float):
         """
@@ -181,3 +189,8 @@ class Camera3D():
             return False
 
         return True
+
+    def draw_everything_in_camera(self, face_objects: faces):
+        """
+        given list of faces, and draw it manually.
+        """

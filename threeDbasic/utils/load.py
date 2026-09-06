@@ -1,5 +1,5 @@
 from threeDbasic.base.faces import faces, face
-from threeDbasic.base.vector import vector3
+from threeDbasic.math.vector import vector3
 
 def read_off_file(location: str, globalty = False) -> faces:
     """

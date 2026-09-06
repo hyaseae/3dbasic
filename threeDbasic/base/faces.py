@@ -1,4 +1,4 @@
-from vector import vector3, dot, cross
+from threeDbasic.math.vector import vector3, dot, cross
 import pygame
 
 class face():

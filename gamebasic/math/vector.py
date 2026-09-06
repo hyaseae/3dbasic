@@ -13,7 +13,7 @@ class vector3():
         self.x = x
         self.y = y
         self.z = z
-        self.vector_list = [x, y, z]
+        self.iter = 0
     
     def dot_product(self, other) -> float:
         """
@@ -54,6 +54,9 @@ class vector3():
     def projection(self, other):
         return self.dot_product(other) * other
 
+    def add(self, other):
+        return vector3(self.x + other.x, self.y + other.y, self.z + other.z)
+
     def __mul__(self, other):
         if isinstance(other, (int, float)):
             return self.mul_scalar(other)
@@ -67,9 +70,6 @@ class vector3():
 
     def __imul__(self, other):
         return self.__mul__(other)
-
-    def add(self, other):
-        return vector3(self.x + other.x, self.y + other.y, self.z + other.z)
 
     def __add__(self, other):
         return self.add(other)
@@ -102,6 +102,32 @@ class vector3():
 
     def __rtruediv__(self, other):
         return self.__truediv__(other)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        self.iter += 1
+        match self.iter:
+            case 1:
+                return self.x
+            case 2:
+                return self.y
+            case 3:
+                return self.z
+            case _:
+                raise StopIteration
+
+    def __getitem__(self, key):
+        match key:
+            case 0:
+                return self.x
+            case 1:
+                return self.y
+            case 2:
+                return self.z
+            case _:
+                raise IndexError(f"vector 3 has only 3 item! {key} index is not good!")
 
 # vector constants.
 e1 = vector3(1,0,0)
