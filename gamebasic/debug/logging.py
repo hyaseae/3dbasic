@@ -48,4 +48,10 @@ class LOG():
             for msg in self.errlist:
                 print(msg)
         
-        
+    def clear_log(self) -> None:
+        """
+        clear all logs.
+        """
+        self.msglist.clear()
+        self.warnlist.clear()
+        self.errlist.clear()

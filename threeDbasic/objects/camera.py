@@ -2,14 +2,13 @@ import pygame
 from threeDbasic.math.vector import vector3, angle_diff, e3, rotation_throuh_axis, dot
 from threeDbasic.base.inrange import inrange
 from threeDbasic.base.faces import face, faces
+from threeDbasic.math.plane import plane3D
 from math import pi, tan
 from enum import Enum, auto
 
 class CameraProjectionMode(Enum):
     ORTHOGRAPHIC = auto()
     PERSPECTIVE = auto()
-
-
 
 class Camera3D():
     """
@@ -26,10 +25,11 @@ class Camera3D():
         self.pos:vector3 = pos
         self.horizontal_angle:float = horizontal_angle
         self.vertical_angle:float = vertical_angle
-        self.normal_vector:vector3 = normal_vector
-        self.binomial_vector:vector3 = binomial_vector
-        self.mode = CameraProjectionMode.ORTHOGRAPHIC
-        self.view_plane = "plane"
+        self.normal_vector:vector3 = normal_vector.normalize()
+        self.binomial_vector:vector3 = binomial_vector.normalize()
+        self.mode:CameraProjectionMode = CameraProjectionMode.ORTHOGRAPHIC
+        self.view_plane_dist:float = 1.0
+        self.view_plane:plane3D = plane3D(self.pos + self.normal_vector * self.view_plane_dist, self.normal_vector, self.binomial_vector)
 
     def move_to_absloute_pos(self, x:float, y:float, z:float):
         """
@@ -190,7 +190,23 @@ class Camera3D():
 
         return True
 
+    def get_view_plane(self) -> plane3D:
+        """
+        returns self's view plane.
+        """
+        return self.view_plane
+
+    def fix_view_plane(self) -> None:
+        """
+        fix self's view plane, since there might be some unsync issue.
+        """
+        self.view_plane.fix(self.pos + self.normal_vector * self.view_plane_dist, self.normal_vector, self.binomial_vector)
+
+
     def draw_everything_in_camera(self, face_objects: faces):
         """
         given list of faces, and draw it manually.
         """
+
+
+    
