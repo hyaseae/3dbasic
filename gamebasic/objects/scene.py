@@ -46,9 +46,11 @@ class Scene():
         self.current_scene_function = func
         return
 
-    def current_scene(self) -> tuple[bool, str]:
+    def current_scene(self) -> bool:
         """
-        executes current scene's function. 
+        executes current scene's function.
+
+        currently, scene returns bool, rather scene will be changed or not.  
         """
         return self.current_scene_function()
 
@@ -86,9 +88,12 @@ class Scene():
         """
         return signal_name in self.signal_dict
 
-    def get_signal(self, signal_name:str):
+    def get_signal(self, signal_name:str) -> Signal:
         """
         returns signal.
-        if there is no signal named like it, returns 
+        if there is no signal named like it, raises error
         """
-        return self.signal_dict.get(signal_name)
+        ret = self.signal_dict.get(signal_name)
+        if ret is None:
+            raise KeyError()
+        return ret

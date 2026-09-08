@@ -50,6 +50,11 @@ class face():
         _, dist = self.is_point_on_face(pos)
         return dist
 
+    def get_points(self) -> list[vector3]:
+        """
+        return face's points list.
+        """
+        return self.points
 
 def trianglize(surface:face) -> list[face]:
     ret = []

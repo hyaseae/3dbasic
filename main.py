@@ -41,10 +41,19 @@ def init_() -> None:
 def main():
     while True:
         # scene change
-        change_scene, changing_scene_name = scene.current_scene()
+        change_scene = scene.current_scene()
         if change_scene:
-            scene.set_current_scene_name(changing_scene_name)
-            scene.set_current_scene_func(SCENES_FUNCTIONS[changing_scene_name])
+            if scene.check_signal(FormalSignals.NEXT_SCENE.value):
+                changing_scene_name = scene.get_signal(FormalSignals.NEXT_SCENE.value).get_strdata()
+                scene.set_current_scene_name(changing_scene_name)
+                scene.set_current_scene_func(SCENES_FUNCTIONS[changing_scene_name])
+            else:
+                # next scene failed.. 
+                scene.set_current_scene_name(HOME_SCENE_NAME)
+                scene.set_current_scene_func(home_main)
+
+            
+
 
         # signal handling
         if scene.check_signal(FormalSignals.EXIT_GAME.value):
