@@ -54,9 +54,6 @@ class vector3():
     def projection(self, other):
         return self.dot_product(other) * other
 
-    def add(self, other):
-        return vector3(self.x + other.x, self.y + other.y, self.z + other.z)
-
     def __mul__(self, other):
         if isinstance(other, (int, float)):
             return self.mul_scalar(other)
@@ -70,6 +67,9 @@ class vector3():
 
     def __imul__(self, other):
         return self.__mul__(other)
+
+    def add(self, other):
+        return vector3(self.x + other.x, self.y + other.y, self.z + other.z)
 
     def __add__(self, other):
         return self.add(other)
@@ -103,6 +103,7 @@ class vector3():
     def __rtruediv__(self, other):
         return self.__truediv__(other)
 
+    
     def __iter__(self):
         return self
 
