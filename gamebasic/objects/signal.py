@@ -1,24 +1,7 @@
 from enum import Enum, auto
 from collections.abc import Callable
-
-class SignalType(Enum):
-    """
-    sample signal types enum. maybe extended.
-    """
-    NONE = auto()
-    STR = auto()
-    INT = auto()
-    FLOAT = auto()
-    FUNCTION = auto()
-    BOOL = auto()
-    DATA = auto()
-
-class FormalSignals(Enum):
-    """
-    some formal signals to make smart filling work.
-    """
-    EXIT_GAME = "EXIT_SIGNAL"
-    NEXT_SCENE = "NEXT_SCENE"
+from gamebasic.signal.signal_type import SignalType
+from gamebasic.signal.formal_signals import FormalSignals
 
 class Signal():
     """

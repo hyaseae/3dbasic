@@ -1,18 +1,15 @@
 import pygame, sys
 from pygame import Surface
-from scenes.home import main as home_main
-from gamebasic.objects.scene import Scene
+from scenes.home import HomeScene
+from scenes.ingame import IngameScene
 from scenes.home import SCENE_NAME as HOME_SCENE_NAME
+from scenes.ingame import SCENE_NAME as INGAME_SCENE_NAME
 from gamebasic.objects.signal import FormalSignals
+from gamebasic.objects.state import GameState
+from gamebasic.objects.runtime import RunTimeContext
+from gamebasic.io.write import save_game
 
 clock = pygame.time.Clock()
-
-scene = Scene()
-
-SCENES_FUNCTIONS = {
-    HOME_SCENE_NAME: home_main,
-    
-}
 
 #variables
 
@@ -24,50 +21,42 @@ FPS = 60
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 
+# init tasks
+
+
+
+game_state = GameState()
+
+runtime = RunTimeContext(game_state)
+signal_bus = runtime.signal_bus
+scene_manager = runtime.scene_manager
+
+scene_manager.register(HOME_SCENE_NAME, HomeScene)
+scene_manager.register(INGAME_SCENE_NAME, IngameScene)
+
+scene_manager.change_scene(game_state.current_scene_name) # defaulted by HOME
 
 # game inits.
 
 def init_() -> None:
-    scene.log.add_msg("initiating")
-    # init tasks
-    scene.set_current_scene_name(HOME_SCENE_NAME)
-    scene.set_current_scene_func(home_main)
+
     pygame.init()
     pygame.display.set_caption("Game")
 
-    # init ended
-    scene.log.add_msg("initialized")
-
 def main():
     while True:
-        # scene change
-        change_scene = scene.current_scene()
-        if change_scene:
-            if scene.check_signal(FormalSignals.NEXT_SCENE.value):
-                changing_scene_name = scene.get_signal(FormalSignals.NEXT_SCENE.value).get_strdata()
-                scene.set_current_scene_name(changing_scene_name)
-                scene.set_current_scene_func(SCENES_FUNCTIONS[changing_scene_name])
-            else:
-                # next scene failed.. 
-                scene.set_current_scene_name(HOME_SCENE_NAME)
-                scene.set_current_scene_func(home_main)
-
-            
-
-
         # signal handling
-        if scene.check_signal(FormalSignals.EXIT_GAME.value):
+
+        if signal_bus.check(FormalSignals.NEXT_SCENE.value):
+            next_name:str = signal_bus.get(FormalSignals.NEXT_SCENE.value).get_strdata()
+            scene_manager.change_scene(next_name)
+
+        if signal_bus.check(FormalSignals.EXIT_GAME.value):
             # exiting game
 
-            scene.log.add_msg("saving...")
-            # save game
+            # saving game
+            save_game(runtime.game_state)
 
-            scene.log.add_msg("saved!")
-
-            if DEBUG:
-                scene.log.print_by_level(file_output=True)
-
-            scene.log.clear_log()
             # break loop.
             break
 
@@ -75,7 +64,6 @@ def main():
 
 
 if __name__ == "__main__":
-    scene.log.add_msg("started")
     init_()
     main()
     pygame.quit()

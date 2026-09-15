@@ -5,7 +5,7 @@ note that positions are pygame-style.
 
 from abc import ABC, abstractmethod
 from threeDbasic.math.vector import vector3
-
+import pygame
 
 class UIBasic():
 
@@ -26,6 +26,12 @@ class UIBasic():
         """
         self.visible = False
 
+    def change_pos(self, new_pos:vector3):
+        """
+        unrecommended, due to the fact that ui components should be static.
+        """
+        self.pos = new_pos
+
     def get_render_order(self) -> int:
         """
         returns this object's render order.
@@ -37,6 +43,12 @@ class UIBasic():
         returns this object's visibility
         """
         return self.visible
+
+    def get_pos(self) -> vector3:
+        """
+        returns itself's pos
+        """
+        return self.pos
 
     def __lt__(self, other):
         if isinstance(other, UIBasic):
@@ -70,9 +82,9 @@ class UIBasic():
     
 
     @abstractmethod
-    def render(self):
+    def render(self, screen:pygame.Surface):
         """
-        renders itself.
+        renders itself. when implementing, note that screen should be fliped by hand
         """
         pass
 

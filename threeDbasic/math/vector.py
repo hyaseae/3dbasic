@@ -10,9 +10,9 @@ class vector3():
         """
         initialization 3d vector.
         """
-        self.x = x
-        self.y = y
-        self.z = z
+        self.x:float = x
+        self.y:float = y
+        self.z:float = z
         self.iter = 0
     
     def dot_product(self, other) -> float:
@@ -53,6 +53,14 @@ class vector3():
 
     def projection(self, other):
         return self.dot_product(other) * other
+
+    def to_3d_tuple(self) -> tuple[float,float,float]:
+        return (self.x, self.y, self.z)
+
+    def to_2d_tuple(self) -> tuple[float,float]:
+        return (self.x, self.y)
+    
+    
 
     def __mul__(self, other):
         if isinstance(other, (int, float)):

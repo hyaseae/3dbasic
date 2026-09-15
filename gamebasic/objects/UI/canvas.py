@@ -4,16 +4,19 @@ a canvas that includes every ui objects and on.
 
 from UI.ui_base import UIBasic 
 from threeDbasic.math.vector import vector3
+from pygame import Surface
 
 class canvas(UIBasic):
     def __init__(self, width:int = 800, height:int = 600, pos: vector3 = vector3(0,0,0)) -> None:
+
         self.items:list[UIBasic] = []
         self.width: int = width
         self.height: int = height
         self.items_sorted : bool = True
+        
         super().__init__(pos, 0)
 
-    def render(self):
+    def render(self, screen:Surface):
         """
         renders the whole canvas and its items.
         """
@@ -22,7 +25,7 @@ class canvas(UIBasic):
         if not self.items_sorted:
             self.items.sort()
         for item in self.items:
-            item.render()
+            item.render(screen)
 
     def add_item(self, new_item:UIBasic):
         """

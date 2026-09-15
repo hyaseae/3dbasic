@@ -1,12 +1,16 @@
 import pickle
+from gamebasic.objects.state import GameState
 
-def load_scene(filename:str = "save01.pickle")->object:
+def load_scene(filename:str = "save01.png")->GameState:
     """
-    using pickle, load scene data.
+    using pickle, load state data.
     make sure that filenames should be reachable afterwards.
-    should return scene instance, not class.
+    should return state, not class.
     """
     with open(filename, "rb") as file:
-        loaded_scene:object = pickle.load(file)
+        loaded_state:GameState = pickle.load(file)
 
-    return loaded_scene
+    if not isinstance(loaded_state, GameState):
+        raise TypeError("Save file is not correct!")
+
+    return loaded_state

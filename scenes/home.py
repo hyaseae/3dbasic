@@ -2,12 +2,25 @@
 home scene for game starting.
 """
 
-import pygame
+from gamebasic.objects.UI.canvas import canvas
+from gamebasic.objects.scene import Scene
+from gamebasic.objects.state import GameState
 
-SCENE_NAME = "HOME" # for maintaining purpose. must be same with file name.
+SCENE_NAME = "HOME"
 
-def main() -> bool:
+class HomeScene(Scene):
+    def __init__(self, game_state:GameState) -> None:
+        self.game_state:GameState = game_state
+        self.canvas = canvas(800, 600)
 
-    
-    # FINAL
-    return False
+    def update(self) -> bool:
+        return super().update()
+
+    def render(self, screen):
+        return super().render(screen)
+
+    def tick(self, screen) -> bool:
+        # 입력 처리 및 상태 변경
+        self.canvas.render(screen)
+
+        return False
