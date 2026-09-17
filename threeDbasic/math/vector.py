@@ -36,7 +36,7 @@ class vector3():
         """
         return vector3(self.x * scalar, self.y * scalar, self.z * scalar)
 
-    def change(self, x, y, z):
+    def change(self, x:float, y:float, z:float):
         """
         changes x, y, z values immediately to save RAM.
         """

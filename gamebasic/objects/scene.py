@@ -5,10 +5,6 @@ from gamebasic.debug.logging import LOG
 from gamebasic.objects.state import GameState
 from gamebasic.signal.signal_bus import SignalBus
 
-def err_func():
-    """ function for err"""
-    raise FileNotFoundError()
-
 class Scene():
     """
     scene class that gets global datas.

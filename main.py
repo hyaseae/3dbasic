@@ -69,7 +69,11 @@ def main():
         clock.tick(FPS)
 
 
+        # event handling, for some wierd cases that scene does not handles.
+        pygame.event.pump()
+
 if __name__ == "__main__":
+    # for testing this, note that this is working on .venv.
     screen = init_()
     main()
     pygame.quit()

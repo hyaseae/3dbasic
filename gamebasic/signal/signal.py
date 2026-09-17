@@ -2,6 +2,7 @@ from enum import Enum, auto
 from collections.abc import Callable
 from gamebasic.signal.signal_type import SignalType
 from gamebasic.signal.formal_signals import FormalSignals
+from gamebasic.debug.err_func import err_func
 
 class Signal():
     """
@@ -10,13 +11,11 @@ class Signal():
     signal_count = 0
     def __init__(self, signal_type: SignalType = SignalType.NONE, data: None | str | int | float = None, signal_name:str = "") -> None:
 
-        self.type:SignalType = SignalType.NONE
+        self.type:SignalType = signal_type
         self.data: object = None
         self.strdata: str = ""
-        def err_func():
-            raise NotImplementedError()
         self.executable: Callable = err_func
-        self.name:str = ""
+        self.name:str = signal_name
         self.closed:bool = False
         self.numdata: int|float = 0
         self.booldata:bool = False
@@ -33,6 +32,8 @@ class Signal():
             self.booldata = data
         elif (signal_type == SignalType.DATA):
             self.data = data
+        elif signal_type == SignalType.NONE and data is None:
+            pass
         else:
             # type mismatch here
             self.data = data
