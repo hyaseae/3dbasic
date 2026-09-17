@@ -38,10 +38,13 @@ def load_img(file_location:str = "", transparant:bool = False, failed_img:Surfac
     loads file and returns Surface object.
     """
     try:
+        image = pygame.image.load(file_location)
+        if pygame.display.get_surface() is None:
+            return image
         if transparant:
-            return pygame.image.load(filename=file_location).convert_alpha()
-        return pygame.image.load(filename=file_location).convert()
-    except:
+            return image.convert_alpha()
+        return image.convert()
+    except (OSError, pygame.error):
         return failed_img
 
 _IMAGE_CACHE: dict[str, pygame.Surface] = {}

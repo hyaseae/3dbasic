@@ -18,12 +18,13 @@ from threeDbasic.math.vector import vector3
 
 SCENE_NAME = "HOME"
 BUTTON_ASSETS_FOLDER = jr("assets", "UI", "button")
+IMG_ASSETS_FOLDER = jr("assets", "UI")
 
 
 class HomeScene(Scene):
     def __init__(self, game_state:GameState, signal_bus:SignalBus) -> None:
         super().__init__(game_state, signal_bus)
-        self.canvas = canvas(800, 600)
+        self.canvas = canvas(load_cached_img(jr(IMG_ASSETS_FOLDER, "background.png")), 800, 600)
         self.ui_setup()
 
     def ui_setup(self):
@@ -41,6 +42,7 @@ class HomeScene(Scene):
                     data="INGAME"
                 )
             )
+            raise NotImplementedError()
 
         button_start_img = load_cached_img(jr(BUTTON_ASSETS_FOLDER, "start.jpg"))
 
@@ -71,8 +73,7 @@ class HomeScene(Scene):
                     onclick_argument=None
                 )
 
-
-        button_option.get_pos().change(100,105,0)
+        button_option.change_pos(vector3(100, 105, 0))
 
         self.canvas.add_item(button_option)
 
@@ -90,11 +91,10 @@ class HomeScene(Scene):
                             clicked_img=button_exit_img,
                             width=100, height=35, 
                             onclick=exit,
-                            onclick_argument=None
+                            onclick_argument=self.signal_bus
                         )
 
-        button_exit.get_pos().change(140,175,0)
-
+        button_exit.change_pos(vector3(140, 175, 0))
         self.canvas.add_item(button_exit)
 
 

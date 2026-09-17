@@ -8,16 +8,18 @@ from pygame import Surface
 from gamebasic.objects.UI.button import Button
 from pygame.event import Event
 import pygame
+from gamebasic.objects.UI.img import Img
+from gamebasic.debug.err_img import ERR_IMG
 
-class canvas(UIBasic):
-    def __init__(self, width:int = 800, height:int = 600, pos: vector3 = vector3(0,0,0)) -> None:
+class canvas(Img):
+    def __init__(self, background_img:Surface = ERR_IMG, width:int = 800, height:int = 600, pos: vector3 = vector3(0,0,0)) -> None:
 
         self.items:list[UIBasic] = []
         self.width: int = width
         self.height: int = height
         self.items_sorted : bool = True
         
-        super().__init__(pos, 0)
+        super().__init__(background_img, pos, -1)
 
     def render(self, screen:Surface):
         """
@@ -28,6 +30,7 @@ class canvas(UIBasic):
         if not self.items_sorted:
             self.items.sort()
             self.items_sorted = True
+        super().render(screen)
         for item in self.items:
             if item.get_visibility():
                 item.render(screen)

@@ -9,33 +9,10 @@ from gamebasic.objects.state import GameState
 from gamebasic.objects.runtime import RunTimeContext
 from gamebasic.io.write import save_game
 
-clock = pygame.time.Clock()
-
-#variables
-
 DEBUG = True
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 FPS = 60
-
-clock = pygame.time.Clock()
-
-# init tasks
-
-
-
-game_state = GameState()
-
-runtime = RunTimeContext(game_state)
-signal_bus = runtime.signal_bus
-scene_manager = runtime.scene_manager
-
-scene_manager.register(HOME_SCENE_NAME, HomeScene)
-scene_manager.register(INGAME_SCENE_NAME, IngameScene)
-
-scene_manager.change_scene(game_state.current_scene_name) # defaulted by HOME
-
-# game inits.
 
 def init_() -> Surface:
 
@@ -44,6 +21,16 @@ def init_() -> Surface:
     return pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
 def main():
+    clock = pygame.time.Clock()
+    game_state = GameState()
+    runtime = RunTimeContext(game_state)
+    signal_bus = runtime.signal_bus
+    scene_manager = runtime.scene_manager
+
+    scene_manager.register(HOME_SCENE_NAME, HomeScene)
+    scene_manager.register(INGAME_SCENE_NAME, IngameScene)
+    scene_manager.change_scene(game_state.current_scene_name)
+
     while True:
         # signal handling
 
