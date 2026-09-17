@@ -1,7 +1,7 @@
 import pickle
 from gamebasic.objects.state import GameState
 
-def load_scene(filename:str = "save01.png")->GameState:
+def load_game(filename:str = "save01.pickle")->GameState:
     """
     using pickle, load state data.
     make sure that filenames should be reachable afterwards.

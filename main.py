@@ -18,7 +18,6 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 FPS = 60
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock = pygame.time.Clock()
 
 # init tasks
@@ -38,17 +37,18 @@ scene_manager.change_scene(game_state.current_scene_name) # defaulted by HOME
 
 # game inits.
 
-def init_() -> None:
+def init_() -> Surface:
 
     pygame.init()
     pygame.display.set_caption("Game")
+    return pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 
 def main():
     while True:
         # signal handling
 
         if signal_bus.check(FormalSignals.NEXT_SCENE.value):
-            next_name:str = signal_bus.get(FormalSignals.NEXT_SCENE.value).get_strdata()
+            next_name:str = signal_bus.pop(FormalSignals.NEXT_SCENE.value).get_strdata()
             scene_manager.change_scene(next_name)
 
         if signal_bus.check(FormalSignals.EXIT_GAME.value):
@@ -60,11 +60,17 @@ def main():
             # break loop.
             break
 
+        # scene ticking.
+        scene_manager.tick(screen=screen)
+
+        # applying display
+        pygame.display.flip()
+        
         clock.tick(FPS)
 
 
 if __name__ == "__main__":
-    init_()
+    screen = init_()
     main()
     pygame.quit()
     sys.exit()

@@ -1,19 +1,13 @@
 """
 total signals for global data transforming
-somehow doing global's gob, so just using this.
+
 """
-from enum import Enum, auto
-from gamebasic.objects.signal import Signal
-from collections.abc import Callable
 from gamebasic.debug.logging import LOG
 
 
 def err_func():
     """ function for err"""
     raise FileNotFoundError()
-
-# conclusion. no use in enums for scene's name. 
-# since enum is final and unexpandible, enum is not appropriate for scene names/functions.
 
 class Scene():
     """
@@ -42,4 +36,4 @@ class Scene():
         """
         renders the scene.
         """
-        pass
+        raise NotImplementedError()

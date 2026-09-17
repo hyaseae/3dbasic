@@ -9,7 +9,7 @@ class SignalBus:
         self._signals[signal.name] = signal
 
     def check(self, signal_name: str) -> bool:
-        return self._signals.get(signal_name, None) is None
+        return signal_name in self._signals
 
     def get(self, signal_name: str) -> Signal:
         ret:Signal|None = self._signals.get(signal_name)
@@ -18,6 +18,13 @@ class SignalBus:
 
         return ret
 
+    def pop(self, signal_name: str) -> Signal:
+        """
+        returns and removes signal.
+        prefered to use frequently than get function.
+        """
+        ret = self._signals.pop(signal_name)
+        return ret
         
 
     def remove(self, signal_name: str)->None:

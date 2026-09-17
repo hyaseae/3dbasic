@@ -7,5 +7,5 @@ class RunTimeContext():
     def __init__(self, game_state : GameState) -> None:
         self.game_state = game_state
         self.signal_bus = SignalBus()
-        self.scene_manager = SceneManager(game_state)
+        self.scene_manager = SceneManager(game_state, self.signal_bus)
         self.log = LOG()

@@ -14,13 +14,7 @@ class HomeScene(Scene):
         self.canvas = canvas(800, 600)
 
     def update(self) -> bool:
-        return super().update()
+        return False
 
     def render(self, screen):
-        return super().render(screen)
-
-    def tick(self, screen) -> bool:
-        # 입력 처리 및 상태 변경
         self.canvas.render(screen)
-
-        return False
