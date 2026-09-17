@@ -1,4 +1,4 @@
-from gamebasic.objects.signal import Signal
+from gamebasic.signal.signal import Signal
 
 
 class SignalBus:

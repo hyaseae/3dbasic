@@ -4,7 +4,7 @@ from scenes.home import HomeScene
 from scenes.ingame import IngameScene
 from scenes.home import SCENE_NAME as HOME_SCENE_NAME
 from scenes.ingame import SCENE_NAME as INGAME_SCENE_NAME
-from gamebasic.objects.signal import FormalSignals
+from gamebasic.signal.signal import FormalSignals
 from gamebasic.objects.state import GameState
 from gamebasic.objects.runtime import RunTimeContext
 from gamebasic.io.write import save_game
