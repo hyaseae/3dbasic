@@ -2,7 +2,7 @@
 a canvas that includes every ui objects and on.
 """
 
-from UI.ui_base import UIBasic 
+from gamebasic.objects.UI.ui_base import UIBasic 
 from threeDbasic.math.vector import vector3
 from pygame import Surface
 from gamebasic.objects.UI.button import Button

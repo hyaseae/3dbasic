@@ -14,6 +14,7 @@ from gamebasic.debug.err_img import ERR_IMG
 from os.path import join as jr
 from gamebasic.objects.UI.img import load_cached_img
 from gamebasic.signal.signal_type import SignalType
+from threeDbasic.math.vector import vector3
 
 SCENE_NAME = "HOME"
 BUTTON_ASSETS_FOLDER = jr("assets", "UI", "button")
@@ -51,7 +52,7 @@ class HomeScene(Scene):
             onclick_argument=self.signal_bus
         )
         
-        button_start.get_pos().change(60,35,0)
+        button_start.change_pos(vector3(60, 35, 0))
 
         self.canvas.add_item(button_start)
 

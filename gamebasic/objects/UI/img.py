@@ -2,7 +2,7 @@
 img on ui. note that ui is static.
 """
 
-from UI.ui_base import UIBasic
+from gamebasic.objects.UI.ui_base import UIBasic
 from threeDbasic.math.vector import vector3
 from pygame import Surface
 import pygame

@@ -3,7 +3,7 @@ simple button
 """
 
 from pygame import Surface
-from UI.img import Img
+from gamebasic.objects.UI.img import Img
 from threeDbasic.math.vector import vector3
 from gamebasic.debug.err_img import ERR_IMG
 from gamebasic.debug.err_func import err_func
