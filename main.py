@@ -23,12 +23,12 @@ def init_() -> OptionData:
     option = load_option()
     return option
 
-def main(option: OptionData, screen: Surface):
+def main(option_: OptionData, screen: Surface):
     clock = pygame.time.Clock()
 
     context = GameContext(
         game_state=GameState(),
-        option=load_option(),
+        option=option_,
         signal_bus=SignalBus()
     )
     runtime = RunTimeContext(context)

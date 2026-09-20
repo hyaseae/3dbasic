@@ -17,10 +17,12 @@ from gamebasic.objects.UI.img import load_cached_img
 from gamebasic.signal.signal_type import SignalType
 from threeDbasic.math.vector import vector3
 from gamebasic.objects.dataclasses.game_context import GameContext
+from gamebasic.objects.UI.text import Text, load_cached_font
 
 SCENE_NAME = "HOME"
 BUTTON_ASSETS_FOLDER = jr("assets", "UI", "button")
 IMG_ASSETS_FOLDER = jr("assets", "UI")
+FONT_ASSETS_FOLDER = jr("assets", "font")
 
 
 class HomeScene(Scene):
@@ -64,6 +66,13 @@ class HomeScene(Scene):
 
         self.canvas.add_item(button_start)
 
+        # start text of button
+        font = jr(FONT_ASSETS_FOLDER, "[KIM]B_ENG-BOLD.ttf")
+        text_start = Text("start", color=pygame.Color(12,14, 42), font_name=font)
+        text_start.change_pos(vector3(60,35,0))
+        self.canvas.add_item(text_start)
+
+
         # button option
 
         def option():
@@ -82,6 +91,15 @@ class HomeScene(Scene):
         button_option.change_pos(vector3(100, 105, 0))
 
         self.canvas.add_item(button_option)
+
+
+        # option text of button
+
+        text_option = Text("option", color=pygame.Color(42,12, 14), font_name=font)
+        text_option.change_pos(vector3(100,105,0))
+        self.canvas.add_item(text_option)
+
+
 
         # button exit
 
@@ -102,6 +120,14 @@ class HomeScene(Scene):
 
         button_exit.change_pos(vector3(140, 175, 0))
         self.canvas.add_item(button_exit)
+
+
+        # exit text of button
+
+        text_option = Text("exit", color=pygame.Color(14,42, 12), font_name=font)
+        text_option.change_pos(vector3(140,175,0))
+        self.canvas.add_item(text_option)
+
 
     def update(self) -> bool:
         return self.event()

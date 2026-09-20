@@ -30,10 +30,10 @@ class canvas(Img):
         if not self.items_sorted:
             self.items.sort()
             self.items_sorted = True
-        super().render(screen)
         for item in self.items:
             if item.get_visibility():
-                item.render(screen)
+                item.render(self.img)
+        super().render(screen)
 
     def add_item(self, new_item:UIBasic):
         """
