@@ -16,12 +16,12 @@ from gamebasic.objects.UI.img import load_cached_img
 from gamebasic.signal.signal_type import SignalType
 from threeDbasic.math.vector import vector3
 
-SCENE_NAME = "HOME"
+SCENE_NAME = "LOADING"
 BUTTON_ASSETS_FOLDER = jr("assets", "UI", "button")
 IMG_ASSETS_FOLDER = jr("assets", "UI")
 
 
-class HomeScene(Scene):
+class LoadingScene(Scene):
     def __init__(self, game_state:GameState, signal_bus:SignalBus) -> None:
         super().__init__(game_state, signal_bus)
         self.canvas = canvas(load_cached_img(jr(IMG_ASSETS_FOLDER, "background.png")), 800, 600)

@@ -8,17 +8,18 @@ from gamebasic.signal.signal import FormalSignals
 from gamebasic.objects.state import GameState
 from gamebasic.objects.runtime import RunTimeContext
 from gamebasic.io.write import save_game
+from gamebasic.io.read import load_option
+from gamebasic.objects.option import OptionData
 
-DEBUG = True
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-FPS = 60
 
-def init_() -> Surface:
+
+
+def init_() -> OptionData:
 
     pygame.init()
     pygame.display.set_caption("Game")
-    return pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
+    option = load_option()
+    return option
 
 def main():
     clock = pygame.time.Clock()
@@ -27,6 +28,8 @@ def main():
     signal_bus = runtime.signal_bus
     scene_manager = runtime.scene_manager
 
+
+    #maintaining current scenes
     scene_manager.register(HOME_SCENE_NAME, HomeScene)
     scene_manager.register(INGAME_SCENE_NAME, IngameScene)
     scene_manager.change_scene(game_state.current_scene_name)
@@ -42,7 +45,7 @@ def main():
             # exiting game
 
             # saving game
-            save_game(runtime.game_state)
+            save_game(runtime.game_state, runtime.game_state.save_file_name)
 
             # break loop.
             break
@@ -53,7 +56,7 @@ def main():
         # applying display
         pygame.display.flip()
         
-        clock.tick(FPS)
+        clock.tick(option.FPS)
 
 
         # event handling, for some wierd cases that scene does not handles.
@@ -61,7 +64,8 @@ def main():
 
 if __name__ == "__main__":
     # for testing this, note that this is working on .venv.
-    screen = init_()
+    option = init_()
+    screen = pygame.display.set_mode((option.screen_width,option.screen_height))
     main()
     pygame.quit()
     sys.exit()

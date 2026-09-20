@@ -19,9 +19,11 @@ class Button(Img):
         self.height = height
         self.onclick:Callable = onclick
         self.onclick_argument = onclick_argument
+        self._pressed = False
 
         self.rect = pygame.Rect(int(pos.x), int(pos.y), width, height)
         self.change_size(self.width,self.height)
+        self.img = self.non_click_img
 
     def change_pos(self, new_pos: vector3):
         super().change_pos(new_pos)
@@ -35,7 +37,9 @@ class Button(Img):
         """
         self.width, self.height = sizex, sizey
         self.rect.size = (sizex, sizey)
-        super().change_size(sizex, sizey)
+        self.non_click_img = pygame.transform.scale(self.non_click_img, (sizex, sizey))
+        self.clicked_img = pygame.transform.scale(self.clicked_img, (sizex, sizey))
+        self.img = self.clicked_img if self._pressed else self.non_click_img
 
     def is_mouse_in_button(self, mousepos:tuple[int,int])->bool:
         """
@@ -46,6 +50,10 @@ class Button(Img):
         return self.rect.collidepoint(mousepos)
     
     def clicked(self):
+        if self._pressed:
+            # if button is already pressed, it should not repeat onclick method.
+            return
+        self._pressed = True
         self.img = self.clicked_img
         if self.onclick_argument is None:
             self.onclick()
@@ -53,4 +61,5 @@ class Button(Img):
             self.onclick(self.onclick_argument)
 
     def released(self):
+        self._pressed = False
         self.img = self.non_click_img
