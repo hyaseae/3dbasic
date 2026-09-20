@@ -4,7 +4,8 @@ home scene for game starting.
 
 from gamebasic.objects.UI.canvas import canvas
 from gamebasic.objects.scene import Scene
-from gamebasic.objects.state import GameState
+from gamebasic.objects.dataclasses.state import GameState
+from gamebasic.objects.dataclasses.option import OptionData
 from gamebasic.signal.signal_bus import SignalBus
 import pygame
 from gamebasic.signal.signal import Signal
@@ -15,6 +16,7 @@ from os.path import join as jr
 from gamebasic.objects.UI.img import load_cached_img
 from gamebasic.signal.signal_type import SignalType
 from threeDbasic.math.vector import vector3
+from gamebasic.objects.dataclasses.game_context import GameContext
 
 SCENE_NAME = "LOADING"
 BUTTON_ASSETS_FOLDER = jr("assets", "UI", "button")
@@ -22,9 +24,14 @@ IMG_ASSETS_FOLDER = jr("assets", "UI")
 
 
 class LoadingScene(Scene):
-    def __init__(self, game_state:GameState, signal_bus:SignalBus) -> None:
-        super().__init__(game_state, signal_bus)
-        self.canvas = canvas(load_cached_img(jr(IMG_ASSETS_FOLDER, "background.png")), 800, 600)
+    def __init__(
+        self,
+        context: GameContext
+    ) -> None:
+        super().__init__(context)
+        self.canvas = canvas(load_cached_img(jr(IMG_ASSETS_FOLDER, "background.png")),
+                            context.option.screen_width,
+                            context.option.screen_height)
         self.ui_setup()
 
     def ui_setup(self):

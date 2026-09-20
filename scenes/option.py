@@ -18,20 +18,20 @@ from gamebasic.signal.signal_type import SignalType
 from threeDbasic.math.vector import vector3
 from gamebasic.objects.dataclasses.game_context import GameContext
 
-SCENE_NAME = "HOME"
+SCENE_NAME = "OPTION"
 BUTTON_ASSETS_FOLDER = jr("assets", "UI", "button")
 IMG_ASSETS_FOLDER = jr("assets", "UI")
 
 
-class HomeScene(Scene):
+class OptionScene(Scene):
     def __init__(
         self,
-        context : GameContext
+        context: GameContext
     ) -> None:
         super().__init__(context)
-        self.canvas = canvas(load_cached_img(jr(IMG_ASSETS_FOLDER, "background.png")),
-                              context.option.screen_width, 
-                              context.option.screen_height)
+        self.canvas = canvas(load_cached_img(jr(IMG_ASSETS_FOLDER, "background-option.png")), 
+                             context.option.screen_width, 
+                             context.option.screen_height)
         self.ui_setup()
 
     def ui_setup(self):
@@ -102,6 +102,7 @@ class HomeScene(Scene):
 
         button_exit.change_pos(vector3(140, 175, 0))
         self.canvas.add_item(button_exit)
+
 
     def update(self) -> bool:
         return self.event()

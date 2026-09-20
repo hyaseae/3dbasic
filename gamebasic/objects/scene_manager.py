@@ -3,13 +3,14 @@ Scene manager.
 """
 
 from gamebasic.objects.scene import Scene
-from gamebasic.objects.state import GameState
-from gamebasic.signal.signal_bus import SignalBus
+from gamebasic.objects.dataclasses.game_context import GameContext
 
 class SceneManager:
-    def __init__(self, game_state:GameState, signal_bus:SignalBus) -> None:
-        self.game_state:GameState = game_state
-        self.signal_bus:SignalBus = signal_bus
+    def __init__(
+        self,
+        context:GameContext
+    ) -> None:
+        self.context = context
         self.current_scene: Scene | None = None
         self._factories = {}
 
@@ -20,8 +21,8 @@ class SceneManager:
         if name not in self._factories:
             raise KeyError(f"uncorrect scene name : {name}")
         factory = self._factories[name]
-        self.game_state.current_scene_name = name
-        self.current_scene = factory(self.game_state, self.signal_bus)
+        self.context.game_state.current_scene_name = name
+        self.current_scene = factory(self.context)
 
     def tick(self, screen) -> bool:
         if self.current_scene is None:

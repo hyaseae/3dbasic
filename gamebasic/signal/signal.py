@@ -9,7 +9,7 @@ class Signal():
     signals idead by godot engine.
     """
     signal_count = 0
-    def __init__(self, signal_type: SignalType = SignalType.NONE, data: None | str | int | float = None, signal_name:str = "") -> None:
+    def __init__(self, signal_type: SignalType = SignalType.NONE, data: None | str | int | float | object = None, signal_name:str = "") -> None:
 
         self.type:SignalType = signal_type
         self.data: object = None

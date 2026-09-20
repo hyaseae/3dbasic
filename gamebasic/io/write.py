@@ -1,6 +1,6 @@
 import pickle
-from gamebasic.objects.state import GameState
-from gamebasic.objects.option import OptionData
+from gamebasic.objects.dataclasses.state import GameState
+from gamebasic.objects.dataclasses.option import OptionData
 
 def save_game(state:GameState, filename:str = "save01.pickle") -> None:
     """
