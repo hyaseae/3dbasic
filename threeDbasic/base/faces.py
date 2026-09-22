@@ -1,14 +1,14 @@
 from threeDbasic.math.vector import vector3, dot, cross
 import pygame
 
-class face():
-    def __init__(self, p_initialized = False, points:list[vector3] = [], color = pygame.Color(255,255,255)) -> None:
+class Face():
+    def __init__(self, p_initialized = False, points:list[vector3] = [], default_color = pygame.Color(255,255,255)) -> None:
         if (p_initialized):
             self.points:list[vector3] = points
         else:
             self.points:list[vector3] = []
 
-        self.color = color
+        self.color = default_color
         
 
     def add_point(self, point:vector3):
@@ -39,7 +39,7 @@ class face():
         lengths.append(dist)
 
         smallest = min(lengths)
-        if smallest >= dist - 1e-10:
+        if smallest >= dist - 1e-10: # TODO: use epsilon in global
             return (True, smallest)
         return (False, smallest)
 
@@ -56,22 +56,22 @@ class face():
         """
         return self.points
 
-def trianglize(surface:face) -> list[face]:
+def trianglize(surface:Face) -> list[Face]:
     ret = []
     for i in range(len(surface.points) - 2):
-        ret.append(face(True, [surface.points[0], surface.points[i+1], surface.points[i+2]]))
+        ret.append(Face(True, [surface.points[0], surface.points[i+1], surface.points[i+2]]))
     return ret
 
 
 
-class faces():
+class Faces():
     def __init__(self):
-        self.faces:list[face] = []
+        self.faces:list[Face] = []
 
-    def add_face(self, new_face:face) -> None:
+    def add_face(self, new_face:Face) -> None:
         self.faces.append(new_face)
 
-    def add_faces(self, new_face_list:list[face]) -> None:
+    def add_faces(self, new_face_list:list[Face]) -> None:
         self.faces.extend(new_face_list)
 
     def __getitem__(self, key):

@@ -1,12 +1,12 @@
 import pygame
-from threeDbasic.base.faces import face, trianglize
+from threeDbasic.base.faces import Face, trianglize
 from threeDbasic.objects.camera import Camera3D
 from threeDbasic.math.plane import plane3D
 from threeDbasic.math.vector import vector3
 
 
 
-def render_face_orthographic(screen: pygame.Surface, camera: Camera3D, face:face) -> None:
+def render_face_orthographic(screen: pygame.Surface, camera: Camera3D, face:Face) -> None:
     """
     finally renders some face to the pygame surface, by given camera.
     """

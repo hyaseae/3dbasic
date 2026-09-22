@@ -4,8 +4,6 @@ home scene for game starting.
 
 from gamebasic.objects.UI.canvas import canvas
 from gamebasic.objects.scene import Scene
-from gamebasic.objects.dataclasses.state import GameState
-from gamebasic.objects.dataclasses.option import OptionData
 from gamebasic.signal.signal_bus import SignalBus
 import pygame
 from gamebasic.signal.signal import Signal
@@ -59,7 +57,7 @@ class HomeScene(Scene):
             clicked_img=button_start_img,
             width=100, height=35, 
             onclick=start,
-            onclick_argument=self.signal_bus
+            onclick_argument=self.context.signal_bus
         )
         
         button_start.change_pos(vector3(60, 35, 0))
@@ -115,7 +113,7 @@ class HomeScene(Scene):
                             clicked_img=button_exit_img,
                             width=100, height=35, 
                             onclick=exit,
-                            onclick_argument=self.signal_bus
+                            onclick_argument=self.context.signal_bus
                         )
 
         button_exit.change_pos(vector3(140, 175, 0))
@@ -143,7 +141,7 @@ class HomeScene(Scene):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 # sending a quit signal.
-                self.signal_bus.add(Signal(signal_name=FormalSignals.EXIT_GAME.value))
+                self.context.signal_bus.add(Signal(signal_name=FormalSignals.EXIT_GAME.value))
                 return True
             else:
                 self.canvas.check_event(event)

@@ -1,7 +1,7 @@
-from threeDbasic.base.faces import faces, face
+from threeDbasic.base.faces import Faces, Face
 from threeDbasic.math.vector import vector3
 
-def read_off_file(location: str, globalty = False) -> faces:
+def read_off_file(location: str, globalty = False) -> Faces:
     """
     reads off file at given location.
 
@@ -18,7 +18,7 @@ def read_off_file(location: str, globalty = False) -> faces:
     `
 
     """
-    model = faces()
+    model = Faces()
     with open(location, "r", encoding="UTF-8") as file:
         def read_with_ignoring_comments() -> str:
             raw = file.readline().strip()
@@ -37,7 +37,7 @@ def read_off_file(location: str, globalty = False) -> faces:
         vertices = [vector3(*(float(s) for s in read_with_ignoring_comments())) for _ in range(vertice_num)]
 
         for _ in range(face_num):
-            cur_face = face()
+            cur_face = Face()
             cur_line = read_with_ignoring_comments()
             # format with 7 i j k l m ...
             for i in cur_line.split(" ")[1:]:

@@ -1,4 +1,5 @@
 from math import sqrt,cos,sin
+from threeDbasic.base.constants import EPSILONE
 
 class vector3():
     """
@@ -59,7 +60,12 @@ class vector3():
 
     def to_2d_tuple(self) -> tuple[float,float]:
         return (self.x, self.y)
-    
+
+    def is_zero_vector(self) -> bool:
+        """
+        returns if vector is zero vector
+        """
+        return is_similar_vector(self, ZERO)
     
 
     def __mul__(self, other):
@@ -142,6 +148,7 @@ class vector3():
 e1 = vector3(1,0,0)
 e2 = vector3(0,1,0)
 e3 = vector3(0,0,1)
+ZERO = vector3(0,0,0)
 
 def cross(v1:vector3, v2:vector3):
     """
@@ -173,3 +180,10 @@ def angle_diff(v1:vector3, v2:vector3, zeortopi = True) -> float:
     elif ret <= pi/2:
         return ret
     return pi/2 - ret
+
+def is_similar_vector(a:vector3, b:vector3, epsilon=EPSILONE):
+    """
+    check if two vector is similar.
+    """
+
+    return (a - b).size_squared() <= epsilon

@@ -1,10 +1,12 @@
 import pygame
-from threeDbasic.math.vector import vector3, angle_diff, e3, rotation_throuh_axis, dot
+from threeDbasic.math.vector import vector3, angle_diff, e3, rotation_throuh_axis, dot,ZERO
 from threeDbasic.base.inrange import inrange
-from threeDbasic.base.faces import face, faces
+from threeDbasic.base.faces import Face, Faces
 from threeDbasic.math.plane import plane3D
+from threeDbasic.math.calc import is_similar
 from math import pi, tan
 from enum import Enum, auto
+from threeDbasic.math.vector import is_similar_vector
 
 class CameraProjectionMode(Enum):
     ORTHOGRAPHIC = auto()
@@ -14,19 +16,20 @@ class Camera3D():
     """
     a camera object and utils.
     """
-    def __init__(self, pos = vector3(0,0,0), horizontal_angle = pi/4, vertical_angle = pi/3, normal_vector = vector3(1,0,0), binomial_vector = vector3(0,0,1)) -> None:
+    def __init__(self, pos = vector3(0,0,0), horizontal_angle = pi/4, vertical_angle = pi/3, normal_vector = vector3(1,0,0), binomial_vector = vector3(0,0,1), initial_upside:vector3 = e3) -> None:
         """
         pos: absolute position of camera.
         horizontal_angle: a screen's width. if horizontal angle is 90 degrees, horizontally 45 degrees from normal veector will be shown.
         vertical_angle: a screen's height. if vertical angle is 60 degrees, vertically 30 degrees from normal veector will be shown.
-        normal_vector: a vector that camera's screen center is directing. must be normal vector.
-        binomial_vector: a vector that camera's screen upside is directing. must be normal vector.
+        normal_vector: a vector that camera's screen center is directing. must be normal vector. x
+        binomial_vector: a vector that camera's screen upside is directing. must be normal vector. z
         """
         self.pos:vector3 = pos
         self.horizontal_angle:float = horizontal_angle
         self.vertical_angle:float = vertical_angle
         self.normal_vector:vector3 = normal_vector.normalize()
         self.binomial_vector:vector3 = binomial_vector.normalize()
+        self.initial_upside: vector3 = initial_upside
         self.mode:CameraProjectionMode = CameraProjectionMode.ORTHOGRAPHIC
         self.view_plane_dist:float = 1.0
         self.view_plane:plane3D = plane3D(self.pos + self.normal_vector * self.view_plane_dist, self.normal_vector, self.binomial_vector)
@@ -36,6 +39,27 @@ class Camera3D():
         immediately change camera's position.
         """
         self.pos.change(x,y,z)
+
+    # def look_at_certain_position(self, pos:vector3):
+    #     """
+    #     make self look at certain position, changing it's normal vector and binomial vector.
+    #     position is not modified.
+    #     """
+    #     self.look_at_certain_direction(pos - self.pos)
+
+    # def look_at_certain_direction(self, direction:vector3) -> None:
+    #     """
+    #     make self's normal vector look at certain direction.
+    #     position is not modified.
+    #     """
+    #     if is_similar_vector(direction.normalize(), self.normal_vector):
+    #         return
+    #     side_vector = self.binomial_vector * self.normal_vector
+    #     self.view_plane.fix(ZERO, self.normal_vector, self.binomial_vector)
+    #     # make view plane positioned at origin for calculation.
+    #     orthorized_direction = self.view_plane.orthographic_projection_point(direction)
+    # NOTE: this freking thing is hard to make and currently useless, so just stop doign this. brrrrr
+
     
     def get_horizontal_balance(self):
         """
@@ -66,7 +90,7 @@ class Camera3D():
             self.normal_vector = rot_vector
             self.binomial_vector = rot_binomial
             return
-        if not limited_angle.check_value(dot(e3, rot_binomial)):
+        if not limited_angle.check_value(dot(self.initial_upside, rot_binomial)):
             if clutching:
                 self.binomial_vector = rot_binomial * -1
                 self.normal_vector = rot_vector
@@ -95,8 +119,8 @@ class Camera3D():
             self.normal_vector = rot_vector
             return
         if e3rotation:
-            rot_vector = rotation_throuh_axis(self.normal_vector, e3, angle=angle)
-            rot_binomial = rotation_throuh_axis(self.binomial_vector, e3, angle=angle)
+            rot_vector = rotation_throuh_axis(self.normal_vector, self.initial_upside, angle=angle)
+            rot_binomial = rotation_throuh_axis(self.binomial_vector, self.initial_upside, angle=angle)
             self.normal_vector = rot_vector
             self.binomial_vector = rot_binomial
             return
@@ -150,7 +174,7 @@ class Camera3D():
             screen_height / 2 * vertical / half_vertical,
         )
 
-    def camera_visible_surface_lazy(self, surface:face, ignorance_range:inrange = inrange(0, 0.1), face_CCW= False) -> bool:
+    def camera_visible_surface_lazy(self, surface:Face, ignorance_range:inrange = inrange(0, 0.1), face_CCW= False) -> bool:
         """
         check if surface is visible from camera's view, roughly
         """
@@ -169,7 +193,7 @@ class Camera3D():
 
         return True
 
-    def camera_visible_surface(self, surface:face, ignorance_range : inrange = inrange(0, 0.1), face_CCW = False) -> bool:
+    def camera_visible_surface(self, surface:Face, ignorance_range : inrange = inrange(0, 0.1), face_CCW = False) -> bool:
         """
         check if surface is visible.
         distance is checked more strictly, also note that this function is purposed on big faces.
@@ -203,10 +227,11 @@ class Camera3D():
         self.view_plane.fix(self.pos + self.normal_vector * self.view_plane_dist, self.normal_vector, self.binomial_vector)
 
 
-    def draw_everything_in_camera(self, face_objects: faces):
+    def draw_everything_in_camera(self, face_objects: Faces):
         """
         given list of faces, and draw it manually.
         """
+
 
 
     
