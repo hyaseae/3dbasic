@@ -9,16 +9,16 @@ class Face():
             self.points:list[vector3] = []
 
         self.color = default_color
-        
+        self.normal_vector = self.get_normal_vector()
 
     def add_point(self, point:vector3):
         self.points.append(point)
 
-    def normal_vector(self) -> vector3:
+    def get_normal_vector(self) -> vector3:
         """returns normal vector of face. """
         return cross(self.points[0] - self.points[1], self.points[0] - self.points[2])
 
-    def average_point(self) -> vector3:
+    def get_average_point(self) -> vector3:
         sum_ = vector3(0,0,0)
         for v in self.points:
             sum_ += v
@@ -33,7 +33,7 @@ class Face():
         for v in self.points:
             lengths.append((v-pos).size_squared)
 
-        normal = self.normal_vector()
+        normal = self.get_normal_vector()
         d = -1 * dot(normal, self.points[0])
         dist = (dot(normal, pos) + d) ** 2 / normal.size_squared()
         lengths.append(dist)

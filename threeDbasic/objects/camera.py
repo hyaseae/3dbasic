@@ -178,11 +178,11 @@ class Camera3D():
         """
         check if surface is visible from camera's view, roughly
         """
-        normal = surface.normal_vector() if face_CCW else surface.normal_vector() * -1
+        normal = surface.get_normal_vector() if face_CCW else surface.get_normal_vector() * -1
         if dot(normal, self.normal_vector) <= 0:
             return False
 
-        dist = surface.average_point() - self.pos
+        dist = surface.get_average_point() - self.pos
         # LAZY POINT
         if not ignorance_range.check_value(dist.size_squared()):
             # note that distance is squraed here.
@@ -199,7 +199,7 @@ class Camera3D():
         distance is checked more strictly, also note that this function is purposed on big faces.
         """
 
-        normal = surface.normal_vector() if face_CCW else surface.normal_vector() * -1
+        normal = surface.get_normal_vector() if face_CCW else surface.get_normal_vector() * -1
         if dot(normal, self.normal_vector) <= 0:
             return False
 
@@ -208,7 +208,7 @@ class Camera3D():
             # note that distance is squraed here.
             return False
 
-        dist = surface.average_point() - self.pos
+        dist = surface.get_average_point() - self.pos
         if dot(dist, self.normal_vector) <= 0:
             return False
 
