@@ -1,4 +1,5 @@
 from math import sqrt,cos,sin
+from typing import Any
 from threeDbasic.base.constants import EPSILONE
 
 class vector3():
@@ -141,6 +142,28 @@ class vector3():
                 return self.y
             case 2:
                 return self.z
+            case _:
+                raise IndexError(f"vector 3 has only 3 item! {key} index is not good!")
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        match int(name):
+            case 0:
+                self.x = value
+            case 1:
+                self.y = value
+            case 2:
+                self.z = value
+            case _:
+                raise IndexError(f"vector 3 has only 3 item! {name} index is not good!")
+
+    def __setitem__(self, key, value):
+        match int(key):
+            case 0:
+                self.x = value
+            case 1:
+                self.y = value
+            case 2:
+                self.z = value
             case _:
                 raise IndexError(f"vector 3 has only 3 item! {key} index is not good!")
 

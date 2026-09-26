@@ -64,6 +64,7 @@ def main(option_: OptionData, screen: Surface):
         # applying display
         pygame.display.flip()
         
+        #print(clock.get_fps())
         clock.tick(option.FPS)
 
 

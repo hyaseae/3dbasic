@@ -34,6 +34,7 @@ class Camera3D():
         self.view_plane_dist:float = 1.0
         self.view_plane:plane3D = plane3D(self.pos + self.normal_vector * self.view_plane_dist, self.normal_vector, self.binomial_vector)
 
+
     def move_to_absloute_pos(self, x:float, y:float, z:float):
         """
         immediately change camera's position.
@@ -87,13 +88,13 @@ class Camera3D():
         rot_vector = rotation_throuh_axis(self.normal_vector, rot_axis, angle=angle)
         rot_binomial = (self.normal_vector * rot_axis)
         if not limited:
-            self.normal_vector = rot_vector
-            self.binomial_vector = rot_binomial
+            self.normal_vector = rot_vector.normalize()
+            self.binomial_vector = rot_binomial.normalize()
             return
         if not limited_angle.check_value(dot(self.initial_upside, rot_binomial)):
             if clutching:
                 self.binomial_vector = rot_binomial * -1
-                self.normal_vector = rot_vector
+                self.normal_vector = rot_vector.normalize()
                 return
             # do nothing.
             return
@@ -116,13 +117,13 @@ class Camera3D():
         """
         if not limited:
             rot_vector = rotation_throuh_axis(self.normal_vector, self.binomial_vector, angle=angle)
-            self.normal_vector = rot_vector
+            self.normal_vector = rot_vector.normalize()
             return
         if e3rotation:
             rot_vector = rotation_throuh_axis(self.normal_vector, self.initial_upside, angle=angle)
             rot_binomial = rotation_throuh_axis(self.binomial_vector, self.initial_upside, angle=angle)
-            self.normal_vector = rot_vector
-            self.binomial_vector = rot_binomial
+            self.normal_vector = rot_vector.normalize()
+            self.binomial_vector = rot_binomial.normalize()
             return
 
         cross_vector: vector3 = self.normal_vector * self.binomial_vector
@@ -131,7 +132,7 @@ class Camera3D():
             self.rotation_horizontal(angle, e3rotation=True)
             return
         rot_vector = rotation_throuh_axis(self.normal_vector, self.binomial_vector, angle)
-        self.normal_vector = rot_vector
+        self.normal_vector = rot_vector.normalize()
         return
 
 
@@ -156,9 +157,9 @@ class Camera3D():
             raise ValueError("vertical_angle must be between 0 and pi")
 
         # The vector is already relative to the camera, as specified above.
-        forward = self.normal_vector.normalize()
-        up = self.binomial_vector.normalize()
-        right = (forward * up).normalize()
+        forward = self.normal_vector
+        up = self.binomial_vector
+        right = (forward * up)
 
         depth = dot(absolute_vector, forward)
         if depth <= 0:
@@ -169,9 +170,10 @@ class Camera3D():
         half_horizontal = tan(self.horizontal_angle / 2)
         half_vertical = tan(self.vertical_angle / 2)
 
-        return (
+        return vector3(
             screen_width / 2 * horizontal / half_horizontal,
             screen_height / 2 * vertical / half_vertical,
+            depth
         )
 
     def camera_visible_surface_lazy(self, surface:Face, ignorance_range:inrange = inrange(0, 0.1), face_CCW= False) -> bool:
@@ -212,7 +214,15 @@ class Camera3D():
         if dot(dist, self.normal_vector) <= 0:
             return False
 
-        return True
+        # frustum clipping.
+        # checking for face is in view surface.
+        # if any of point is in screen, returns true.
+        for point in surface.get_points():
+            screen_pos = self.get_relative_pos_on_screen(point - self.pos, screen_width=1, screen_height=1)
+            if inrange(-1.1,1.1).check_value(screen_pos.x) or inrange(-1.1,1.1).check_value(screen_pos.y):
+                return True
+
+        return False
 
     def get_view_plane(self) -> plane3D:
         """
