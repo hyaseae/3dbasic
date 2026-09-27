@@ -12,7 +12,7 @@ _MAX_OBJECTS_PER_LEAF = 2
 
 @dataclass
 class BVHNode:
-    # LL for BVH
+    # tree structure for bvh. 
     bounds: Box
     objects: list[Object3d] | None = None
     left: BVHNode | None = None
@@ -24,7 +24,7 @@ class BVH():
         self.root : BVHNode | None = None
 
     @classmethod
-    def get_objects_bounding_box(cls, objects:list[Object3d]):
+    def get_objects_bounding_box(cls, objects:list[Object3d]) -> Box:
         boxes = []
         for obj in objects:
             boxes.append(obj.object_bounding_box())
@@ -54,7 +54,7 @@ class BVH():
         self.root = self.build_node(self.objects) if self.objects else None
         return self.root
 
-    def get_plausible_objects(self, ray:Ray) -> list[Object3d]:
+    def get_plausible_objects(self, ray: Ray) -> list[Object3d]:
         """
         return objects from bvh tree.
         """
