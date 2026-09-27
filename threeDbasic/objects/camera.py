@@ -176,11 +176,11 @@ class Camera3D():
             depth
         )
 
-    def camera_visible_surface_lazy(self, surface:Face, ignorance_range:inrange = inrange(0, 0.1), face_CCW= False) -> bool:
+    def camera_visible_surface_lazy(self, surface:Face, ignorance_range:inrange = inrange(0, 0.1), face_CCW= True) -> bool:
         """
         check if surface is visible from camera's view, roughly
         """
-        normal = surface.get_normal_vector() if face_CCW else surface.get_normal_vector() * -1
+        normal = surface.get_normal_vector() * -1 if face_CCW else surface.get_normal_vector() * 1
         if dot(normal, self.normal_vector) <= 0:
             return False
 
@@ -195,13 +195,13 @@ class Camera3D():
 
         return True
 
-    def camera_visible_surface(self, surface:Face, ignorance_range : inrange = inrange(0, 0.1), face_CCW = False) -> bool:
+    def camera_visible_surface(self, surface:Face, ignorance_range : inrange = inrange(0, 0.1), face_CCW = True) -> bool:
         """
         check if surface is visible.
         distance is checked more strictly, also note that this function is purposed on big faces.
         """
 
-        normal = surface.get_normal_vector() if face_CCW else surface.get_normal_vector() * -1
+        normal = surface.get_normal_vector() * -1 if face_CCW else surface.get_normal_vector() * 1
         if dot(normal, self.normal_vector) <= 0:
             return False
 

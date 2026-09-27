@@ -37,7 +37,7 @@ def read_off_file(location: str, globalty = False) -> Faces:
         vertices = [vector3(*(float(s) for s in read_with_ignoring_comments())) for _ in range(vertice_num)]
 
         for _ in range(face_num):
-            cur_face = Face()
+            cur_face = Face([])
             cur_line = read_with_ignoring_comments()
             # format with 7 i j k l m ...
             for i in cur_line.split(" ")[1:]:

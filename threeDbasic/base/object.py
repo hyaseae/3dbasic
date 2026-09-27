@@ -12,35 +12,34 @@ from threeDbasic.rendering.render_componenet import RenderMode, TextureRendererC
 from threeDbasic.math.vector import vector3
 from threeDbasic.math.box import Box
 
-class ObjectType(Enum):
+class ShapeType(Enum):
     SPHERE = auto()
     BOX = auto()
-
-
+    
 
 class Object3d(ABC):
     def __init__(self, pos:vector3, faces:Faces, 
                  renderer:TextureRendererComponent, 
                  render_data: pygame.Color | pygame.Surface,
                  static:bool,
-                 object_type:ObjectType,
+                 object_type:ShapeType,
                  radius:float = 0,
                  box:Box = Box()
                  ) -> None:
         self.faces:Faces = faces
         self.pos: vector3 = pos
         self.static:bool = static
-        self.object_type:ObjectType = object_type
-        if object_type == ObjectType.SPHERE:
+        self.object_type:ShapeType = object_type
+        if object_type == ShapeType.SPHERE:
             self.radius = radius
-        elif object_type == ObjectType.BOX:
+        elif object_type == ShapeType.BOX:
             self.size = box
         # Object having render componenet is quite abusrd.
 
     def object_bounding_box(self) -> Box:
-        if self.object_type == ObjectType.BOX:
+        if self.object_type == ShapeType.BOX:
             return self.size.fix_center(self.pos)
-        elif self.object_type == ObjectType.SPHERE:
+        elif self.object_type == ShapeType.SPHERE:
             if self.radius < 0:
                 raise ValueError("radius being 0")
 
@@ -54,3 +53,6 @@ class Object3d(ABC):
             )
         else:
             raise NotImplementedError("unknown objectt type")
+
+    def get_faces(self) -> list[Face]:
+        return self.faces.faces

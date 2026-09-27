@@ -145,17 +145,6 @@ class vector3():
             case _:
                 raise IndexError(f"vector 3 has only 3 item! {key} index is not good!")
 
-    def __setattr__(self, name: str, value: Any) -> None:
-        match int(name):
-            case 0:
-                self.x = value
-            case 1:
-                self.y = value
-            case 2:
-                self.z = value
-            case _:
-                raise IndexError(f"vector 3 has only 3 item! {name} index is not good!")
-
     def __setitem__(self, key, value):
         match int(key):
             case 0:
@@ -172,6 +161,9 @@ e1 = vector3(1,0,0)
 e2 = vector3(0,1,0)
 e3 = vector3(0,0,1)
 ZERO = vector3(0,0,0)
+
+det1 = vector3(1, -1, 1)
+det2 = vector3(-1, 1, -1)
 
 def cross(v1:vector3, v2:vector3):
     """

@@ -1,5 +1,6 @@
 from threeDbasic.math.vector import vector3, e1, e2, e3, cross, dot
 from threeDbasic.math.calc import is_similar
+from threeDbasic.math.ray import Ray
 
 class plane3D():
     """
@@ -19,13 +20,14 @@ class plane3D():
         """
         return is_similar(dot(point - self.point, self.normal), 0)
 
-    def intersection_with_line(self, point: vector3, direction: vector3) -> vector3:
+    def intersection_with_line(self, ray: Ray) -> vector3:
         """
         through a give direction, calculates a intersection point.
 
         this is technically a linear algebratic calculation, so using numpy can enhance performance.
 
         """
+        point, direction = ray.pos, ray.direction
 
         # check if normal and direction is parallel
         if is_similar(dot(self.normal, direction), 0):
@@ -39,7 +41,7 @@ class plane3D():
         """
         returns a give vector's orthographic projection point.
         """
-        return self.intersection_with_line(point, -1 * self.normal)
+        return self.intersection_with_line(Ray(point, -1 * self.normal))
 
     def get_basis(self) -> tuple[vector3, vector3, vector3]:
         """

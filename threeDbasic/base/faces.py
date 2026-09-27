@@ -1,22 +1,18 @@
-from threeDbasic.math.vector import vector3, dot, cross
+from threeDbasic.math.vector import vector3, dot, cross, ZERO
 import pygame
 
 class Face():
-    def __init__(self, p_initialized = False, points:list[vector3] = [], default_color = pygame.Color(255,255,255)) -> None:
-        if (p_initialized):
-            self.points:list[vector3] = points
-        else:
-            self.points:list[vector3] = []
-
+    def __init__(self, points:list[vector3], default_color = pygame.Color(255,255,255)) -> None:
+        self.points:list[vector3] = points
+        self.normal_vector = self.get_normal_vector()   
         self.color = default_color
-        self.normal_vector = self.get_normal_vector()
 
     def add_point(self, point:vector3):
         self.points.append(point)
 
     def get_normal_vector(self) -> vector3:
         """returns normal vector of face. """
-        return cross(self.points[0] - self.points[1], self.points[0] - self.points[2])
+        return cross((self.points[1] - self.points[0]), (self.points[2] - self.points[0]))
 
     def get_average_point(self) -> vector3:
         sum_ = vector3(0,0,0)
