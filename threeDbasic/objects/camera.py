@@ -7,6 +7,7 @@ from threeDbasic.math.calc import is_similar
 from math import pi, tan
 from enum import Enum, auto
 from threeDbasic.math.vector import is_similar_vector
+from threeDbasic.math.calc import to_pygame_pos
 
 class CameraProjectionMode(Enum):
     ORTHOGRAPHIC = auto()
@@ -175,6 +176,27 @@ class Camera3D():
             screen_height / 2 * vertical / half_vertical,
             depth
         )
+
+    def change_face_points_to_camera_pos(self, face:Face, screen_width:int = 1600, screen_height:int = 900) -> list[vector3]:
+        ans: list[vector3] = []
+        for point in face.get_points():
+            ans.append(self.get_relative_pos_on_screen(point, screen_width, screen_height))
+        return ans
+    
+    def camera_pos_to_pygame_pos_list(self, points: list[vector3], screen_width:int = 1600, screen_height:int = 900):
+        ans: list[tuple[float, float]] = []
+        for point in points:
+            ans.append(to_pygame_pos(point, screen_width, screen_height))
+        return ans
+
+    def total_pos_changing(self, face:Face, screen_width, screen_height):
+        ans : list[tuple[float, float]] = []
+        for point in face.get_points():
+            point = self.get_relative_pos_on_screen(point, screen_width, screen_height)
+            p = to_pygame_pos(point, screen_width, screen_height)
+            ans.append(p)
+        return ans
+
 
     def camera_visible_surface_lazy(self, surface:Face, ignorance_range:inrange = inrange(0, 0.1), face_CCW= True) -> bool:
         """

@@ -7,6 +7,9 @@ class Face():
         self.normal_vector = self.get_normal_vector()   
         self.color = default_color
 
+    def set_color(self, color: pygame.Color):
+        self.color = color
+
     def add_point(self, point:vector3):
         self.points.append(point)
 

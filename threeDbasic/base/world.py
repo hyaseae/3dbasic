@@ -6,6 +6,7 @@ from threeDbasic.base.object import Object3d
 from threeDbasic.base.optim.bvh import BVH
 from threeDbasic.objects.camera import Camera3D
 import pygame
+from threeDbasic.base.faces import Face
 
 class World3D():
     def __init__(self) -> None:
@@ -34,7 +35,10 @@ class World3D():
         for obj in self.objects:
             # draw one object to another.
             faces = obj.faces
+            polygon: list[tuple[float, float]] = []
             for face in faces:
                 if not camera.camera_visible_surface(face):
                     continue
-                
+                polygon = camera.total_pos_changing(face, 800, 600)
+
+                pygame.draw.polygon(screen, face.color, polygon)
