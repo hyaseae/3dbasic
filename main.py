@@ -58,6 +58,8 @@ def main(option_: OptionData, screen: Surface):
             # break loop.
             break
 
+        screen.fill((0,0,0))
+
         # scene ticking.
         scene_manager.tick(screen=screen)
 

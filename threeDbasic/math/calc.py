@@ -62,3 +62,8 @@ def cramers_rule(a0: vector3, a1: vector3, a2: vector3, b: vector3) -> vector3:
         ax[i] = b
         ans[i] = custom_det(*ax) / custom_det(a0, a1, a2)
     return ans
+
+def to_pygame_pos(absol_x: float, absol_y: float, 
+                  screen_width: float, screen_height: float) -> tuple[float, float]:
+    return (absol_x + screen_width // 2, 
+            screen_height // 2 - absol_y)

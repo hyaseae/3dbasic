@@ -185,13 +185,15 @@ class Camera3D():
             return False
 
         dist = surface.get_average_point() - self.pos
+
+        if dot(dist, self.normal_vector) <= 0:
+            return False
+        
         # LAZY POINT
         if not ignorance_range.check_value(dist.size_squared()):
             # note that distance is squraed here.
             return False
 
-        if dot(dist, self.normal_vector) <= 0:
-            return False
 
         return True
 
@@ -236,12 +238,3 @@ class Camera3D():
         """
         self.view_plane.fix(self.pos + self.normal_vector * self.view_plane_dist, self.normal_vector, self.binomial_vector)
 
-
-    def draw_everything_in_camera(self, face_objects: Faces):
-        """
-        given list of faces, and draw it manually.
-        """
-
-
-
-    

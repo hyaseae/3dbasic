@@ -52,7 +52,7 @@ class Object3d(ABC):
                         self.pos.z + self.radius)
             )
         else:
-            raise NotImplementedError("unknown objectt type")
+            raise NotImplementedError("unknown object type")
 
     def get_faces(self) -> list[Face]:
         return self.faces.faces

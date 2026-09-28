@@ -2,7 +2,7 @@ from threeDbasic.math.vector import vector3, dot, cross, ZERO
 import pygame
 
 class Face():
-    def __init__(self, points:list[vector3], default_color = pygame.Color(255,255,255)) -> None:
+    def __init__(self, points:list[vector3], default_color = pygame.Color(255,0,255)) -> None:
         self.points:list[vector3] = points
         self.normal_vector = self.get_normal_vector()   
         self.color = default_color
@@ -55,7 +55,7 @@ class Face():
 def trianglize(surface:Face) -> list[Face]:
     ret = []
     for i in range(len(surface.points) - 2):
-        ret.append(Face(True, [surface.points[0], surface.points[i+1], surface.points[i+2]]))
+        ret.append(Face([surface.points[0], surface.points[i+1], surface.points[i+2]]))
     return ret
 
 
@@ -63,6 +63,7 @@ def trianglize(surface:Face) -> list[Face]:
 class Faces():
     def __init__(self):
         self.faces:list[Face] = []
+        self.iter = 0
 
     def add_face(self, new_face:Face) -> None:
         self.faces.append(new_face)
@@ -73,3 +74,11 @@ class Faces():
     def __getitem__(self, key):
         self.faces.__getitem__(key)
 
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        self.iter += 1
+        if len(self.faces) < self.iter:
+            raise StopIteration
+        return self.faces[self.iter - 1]
