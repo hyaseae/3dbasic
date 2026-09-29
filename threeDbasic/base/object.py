@@ -18,11 +18,11 @@ class ShapeType(Enum):
     
 
 class Object3d(ABC):
-    def __init__(self, pos:vector3, faces:Faces, 
+    def __init__(self, faces:Faces, 
                  renderer:TextureRendererComponent, 
-                 render_data: pygame.Color | pygame.Surface,
-                 static:bool,
-                 object_type:ShapeType,
+                 static:bool = False,
+                 object_type:ShapeType = ShapeType.SPHERE,
+                 pos:vector3 = vector3(0, 0, 0), 
                  radius:float = 0,
                  box:Box = Box()
                  ) -> None:
@@ -30,6 +30,8 @@ class Object3d(ABC):
         self.pos: vector3 = pos
         self.static:bool = static
         self.object_type:ShapeType = object_type
+        self.renderer:TextureRendererComponent = renderer
+
         if object_type == ShapeType.SPHERE:
             self.radius = radius
         elif object_type == ShapeType.BOX:
@@ -56,3 +58,6 @@ class Object3d(ABC):
 
     def get_faces(self) -> list[Face]:
         return self.faces.faces
+
+    def render(self, camera:Camera3D, screen:pygame.Surface):
+        self.renderer.render(screen=screen, camera=camera, faces=self.faces)

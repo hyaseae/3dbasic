@@ -18,9 +18,16 @@ import pygame
 from gamebasic.signal.signal import Signal
 from gamebasic.signal.formal_signals import FormalSignals
 from threeDbasic.math.vector import vector3
+from threeDbasic.base.world import World3D
+from threeDbasic.base.object import Object3d, ShapeType
+from threeDbasic.utils.load import read_off_file
+from threeDbasic.base.faces import Face, Faces
+from threeDbasic.rendering.render_componenet import ColorRenderer, RenderMode
+
 
 
 IMG_ASSETS_FOLDER = jr("assets", "UI")
+OBJ_ASSETS_FOLDER = jr("assets", "objects")
 
 class IngameScene(Scene):
     def __init__(
@@ -40,23 +47,44 @@ class IngameScene(Scene):
         self.ui_setup()
         self.camera = Camera3D(pos=vector3(-3, 0, 0))
 
+        self.world = World3D()
+        self.world_setup()
+
+
     def ui_setup(self):
 
-        self.canvas.img.fill((225,230,255))
+        self.canvas.img.fill((0,0,0))
 
-        test_img = Img(load_cached_img(jr("assets", "missing_img.jpg")))
-        self.canvas.add_item(test_img)
+        # test_img = Img(load_cached_img(jr("assets", "missing_img.jpg")))
+        # self.canvas.add_item(test_img)
         # NOTE: load_cached_img has some issues.
         # TODO: after we add some imgs to background, cached imgs are modified to that. 
         # should be fixed later.
 
         pass
 
+    def world_setup(self):
+
+        sphere_faces:Faces = read_off_file(jr(OBJ_ASSETS_FOLDER, "colored_sphere.off"))
+
+        sphere = Object3d(pos = vector3(0,0,0), 
+                          faces = sphere_faces, 
+                          renderer = ColorRenderer(color = pygame.Color(255, 0, 0), 
+                                                   render_mode= RenderMode.OBJ_COLOR), 
+                          static = True,
+                          object_type= ShapeType.SPHERE,
+                          radius= 1)
+        
+        self.world.add_obj(sphere)
+
+        self.world.setup()
+
     def update(self) -> bool:
         return self.event()
 
-    def render(self, screen) -> None:
+    def render(self, screen: pygame.Surface) -> None:
         self.canvas.render(screen)
+        self.world.render(camera=self.camera, screen=screen)
 
     def event(self) -> bool:
         """

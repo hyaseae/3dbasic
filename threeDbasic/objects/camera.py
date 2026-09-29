@@ -149,6 +149,10 @@ class Camera3D():
         
         return values:
         relative_x, relative_y: float, float
+
+        A shared pixel focal length is used for both axes so perspective does not
+        stretch objects when the horizontal and vertical fields of view do not
+        match the screen's aspect ratio.
         """
         if screen_width <= 0 or screen_height <= 0:
             raise ValueError("screen dimensions must be positive")
@@ -163,17 +167,17 @@ class Camera3D():
         right = (forward * up)
 
         depth = dot(absolute_vector, forward)
-        if depth <= 0:
-            raise ValueError("absolute_vector must point in front of the camera")
 
         horizontal = dot(absolute_vector, right) / depth
         vertical = dot(absolute_vector, up) / depth
-        half_horizontal = tan(self.horizontal_angle / 2)
-        half_vertical = tan(self.vertical_angle / 2)
+        focal_length = min(
+            screen_width / (2 * tan(self.horizontal_angle / 2)),
+            screen_height / (2 * tan(self.vertical_angle / 2)),
+        )
 
         return vector3(
-            screen_width / 2 * horizontal / half_horizontal,
-            screen_height / 2 * vertical / half_vertical,
+            horizontal * focal_length,
+            vertical * focal_length,
             depth
         )
 
@@ -192,7 +196,9 @@ class Camera3D():
     def total_pos_changing(self, face:Face, screen_width, screen_height):
         ans : list[tuple[float, float]] = []
         for point in face.get_points():
-            point = self.get_relative_pos_on_screen(point, screen_width, screen_height)
+            point = self.get_relative_pos_on_screen(
+                point - self.pos, screen_width, screen_height
+            )
             p = to_pygame_pos(point, screen_width, screen_height)
             ans.append(p)
         return ans
@@ -212,9 +218,9 @@ class Camera3D():
             return False
         
         # LAZY POINT
-        if not ignorance_range.check_value(dist.size_squared()):
-            # note that distance is squraed here.
-            return False
+        # if ignorance_range.check_value(dist.size_squared()):
+        #     # note that distance is squraed here.
+        #     return False
 
 
         return True
@@ -230,9 +236,9 @@ class Camera3D():
             return False
 
         distance = surface.real_dist_long_squared(self.pos)
-        if not ignorance_range.check_value(distance):
-            # note that distance is squraed here.
-            return False
+        # if ignorance_range.check_value(distance):
+        #     # note that distance is squraed here.
+        #     return False
 
         dist = surface.get_average_point() - self.pos
         if dot(dist, self.normal_vector) <= 0:
@@ -259,4 +265,3 @@ class Camera3D():
         fix self's view plane, since there might be some unsync issue.
         """
         self.view_plane.fix(self.pos + self.normal_vector * self.view_plane_dist, self.normal_vector, self.binomial_vector)
-

@@ -30,7 +30,7 @@ class Face():
         """
         lengths = []
         for v in self.points:
-            lengths.append((v-pos).size_squared)
+            lengths.append((v-pos).size_squared())
 
         normal = self.get_normal_vector()
         d = -1 * dot(normal, self.points[0])
@@ -66,7 +66,6 @@ def trianglize(surface:Face) -> list[Face]:
 class Faces():
     def __init__(self):
         self.faces:list[Face] = []
-        self.iter = 0
 
     def add_face(self, new_face:Face) -> None:
         self.faces.append(new_face)
@@ -75,13 +74,7 @@ class Faces():
         self.faces.extend(new_face_list)
 
     def __getitem__(self, key):
-        self.faces.__getitem__(key)
+        return self.faces[key]
 
     def __iter__(self):
-        return self
-
-    def __next__(self):
-        self.iter += 1
-        if len(self.faces) < self.iter:
-            raise StopIteration
-        return self.faces[self.iter - 1]
+        return iter(self.faces)

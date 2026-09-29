@@ -34,11 +34,9 @@ class World3D():
 
         for obj in self.objects:
             # draw one object to another.
-            faces = obj.faces
-            polygon: list[tuple[float, float]] = []
-            for face in faces:
-                if not camera.camera_visible_surface(face):
-                    continue
-                polygon = camera.total_pos_changing(face, 800, 600)
 
-                pygame.draw.polygon(screen, face.color, polygon)
+            obj.render(camera=camera, screen=screen)
+
+
+
+                

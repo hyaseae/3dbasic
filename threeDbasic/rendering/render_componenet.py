@@ -14,18 +14,20 @@ class RenderMode(Enum):
     SIMPLE_IMG = auto() # fill all faces with simple img. does not apply transforming or lighting.
     LIGHTED_IMG = auto() # fill faces with texture img, apply lightings.
     LIGHTED_COLOR = auto() # fill faces colors, and apply lightings.
+    OBJ_COLOR = auto() # fill face colors that object already have.
+    LIGHTED_OBJ_COLOR = auto()
 
 class TextureRendererComponent(ABC):
     """
     component for rendering.
     this thing only gives texture, so other rendering should be done in renderer.
     """
-    def __init__(self, faces:Faces, render_mode:RenderMode) -> None:
-        self.faces:Faces = faces
+    def __init__(self, render_mode:RenderMode, render_data: pygame.Surface | pygame.Color) -> None:
         self.render_mode: RenderMode = render_mode
+        self.render_data = render_data
 
     @abstractmethod
-    def render(self, screen:pygame.Surface, camera:Camera3D, render_data:pygame.Surface | pygame.Color):
+    def render(self, screen:pygame.Surface, camera:Camera3D, faces:Faces) -> None:
         raise NotImplementedError()
 
     @abstractmethod
@@ -33,23 +35,41 @@ class TextureRendererComponent(ABC):
         raise NotImplementedError()
 
 class ColorRenderer(TextureRendererComponent):
-    def __init__(self, color:pygame.Color, faces: Faces, render_mode: RenderMode) -> None:
-        super().__init__(faces, render_mode)
-        self.color = color
-        if self.render_mode == RenderMode.LIGHTED_COLOR:
+    def __init__(self, color:pygame.Color, render_mode: RenderMode) -> None:
+        super().__init__(render_mode, color)
+        if self.render_mode == RenderMode.LIGHTED_COLOR or self.render_mode == RenderMode.LIGHTED_OBJ_COLOR:
             self.using_light = True
-        elif self.render_mode == RenderMode.SIMPLE_COLOR:
+        elif self.render_mode == RenderMode.SIMPLE_COLOR or self.render_mode == RenderMode.OBJ_COLOR:
             self.using_light = False
         else:
             raise TypeError("Rendermode is not correct!")
         
-    def render(self, screen: pygame.Surface, camera: Camera3D, render_data: pygame.Surface | pygame.Color):
-        
+    def render(self, screen: pygame.Surface, camera: Camera3D, faces:Faces):
+
+        if self.render_mode == RenderMode.LIGHTED_COLOR:
+            self.apply_light # currently, not Implemented.
+
+        if not isinstance(self.render_data, pygame.Color):
+            raise TypeError("render data not matching with component type!")
+
+        polygon: list[tuple[float, float]] = []
+        for face in faces:
+            if not camera.camera_visible_surface(face):
+                continue
+            polygon = camera.total_pos_changing(face, screen.get_width(), screen.get_height())
+
+            if self.render_mode == RenderMode.OBJ_COLOR:
+                pygame.draw.polygon(screen, face.color, polygon)
+            else:
+                pygame.draw.polygon(screen, self.render_data, polygon)
+
+
+    def apply_light(self):
         pass
 
 class ImageRenderer(TextureRendererComponent):
-    def __init__(self, color:pygame.Color, faces: Faces, render_mode: RenderMode) -> None:
-        super().__init__(faces, render_mode)
+    def __init__(self, color:pygame.Color, render_mode: RenderMode, render_data: pygame.Surface | pygame.Color) -> None:
+        super().__init__(render_mode, render_data)
         self.color = color
         if self.render_mode == RenderMode.LIGHTED_COLOR:
             self.using_light = True
@@ -57,6 +77,12 @@ class ImageRenderer(TextureRendererComponent):
             self.using_light = False
         else:
             raise TypeError("Rendermode is not correct!")
+
+    def render(self, screen: Surface, camera: Camera3D, faces:Faces):
+        pass # TODO
+
+    def apply_light(self):
+        pass
 
 
 class Texture():
