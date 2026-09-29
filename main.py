@@ -66,8 +66,10 @@ def main(option_: OptionData, screen: Surface):
         # applying display
         pygame.display.flip()
         
-        #print(clock.get_fps())
+        print(clock.get_fps())
         clock.tick(option.FPS)
+        if not clock.get_fps() <= 1e-10:
+            context.game_state.current_delta = 1 / clock.get_fps()
 
 
         # event handling, for some wierd cases that scene does not handles.

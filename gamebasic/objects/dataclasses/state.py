@@ -12,3 +12,4 @@ class GameState:
     save_file_name: str = "save01.pickle"
     player: PlayerData = field(default_factory=PlayerData)
     upgrades: list[str] = field(default_factory=list)
+    current_delta:float = 0

@@ -41,6 +41,7 @@ class Camera3D():
         immediately change camera's position.
         """
         self.pos.change(x,y,z)
+        self.fix_view_plane()
 
     # def look_at_certain_position(self, pos:vector3):
     #     """

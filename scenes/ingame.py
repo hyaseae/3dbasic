@@ -20,7 +20,7 @@ from gamebasic.signal.formal_signals import FormalSignals
 from threeDbasic.math.vector import vector3
 from threeDbasic.base.world import World3D
 from threeDbasic.base.object import Object3d, ShapeType
-from threeDbasic.utils.load import read_off_file
+from threeDbasic.utils.load import read_off_file, read_obj_file
 from threeDbasic.base.faces import Face, Faces
 from threeDbasic.rendering.render_componenet import ColorRenderer, RenderMode
 
@@ -65,17 +65,54 @@ class IngameScene(Scene):
 
     def world_setup(self):
 
+        monstrous_faces:Faces = read_obj_file(jr(OBJ_ASSETS_FOLDER, "test.obj"))
+
+        monster = Object3d(pos=vector3(10,0,0),
+                           faces=monstrous_faces,
+                           renderer=ColorRenderer(
+                               color=pygame.Color(255,0,0),
+                               render_mode=RenderMode.OBJ_COLOR
+                           ),radius=10, scale=0.1)
+        
+        
         sphere_faces:Faces = read_off_file(jr(OBJ_ASSETS_FOLDER, "colored_sphere.off"))
 
         sphere = Object3d(pos = vector3(0,0,0), 
                           faces = sphere_faces, 
                           renderer = ColorRenderer(color = pygame.Color(255, 0, 0), 
-                                                   render_mode= RenderMode.OBJ_COLOR), 
-                          static = True,
+                                                   render_mode= RenderMode.SIMPLE_COLOR), 
+                          static = False,
                           object_type= ShapeType.SPHERE,
-                          radius= 1)
+                          radius= 1,
+                          scale=1)
         
+        sphere_faces:Faces = read_off_file(jr(OBJ_ASSETS_FOLDER, "colored_sphere.off"))
+        
+        sphere2 = Object3d(pos = vector3(0,1,1), 
+                          faces = sphere_faces, 
+                          renderer = ColorRenderer(color = pygame.Color(255, 0, 0), 
+                                                   render_mode= RenderMode.SIMPLE_COLOR), 
+                          static = False,
+                          object_type= ShapeType.SPHERE,
+                          radius= 1,
+                          scale=1)
+
+        sphere_faces:Faces = read_off_file(jr(OBJ_ASSETS_FOLDER, "colored_sphere.off"))
+        
+        sphere3 = Object3d(pos = vector3(0,2,2), 
+                                  faces = sphere_faces, 
+                                  renderer = ColorRenderer(color = pygame.Color(255, 0, 0), 
+                                                           render_mode= RenderMode.SIMPLE_COLOR), 
+                                  static = False,
+                                  object_type= ShapeType.SPHERE,
+                                  radius= 1,
+                                  scale=1)
+
+        
+        self.world.add_obj(monster)
         self.world.add_obj(sphere)
+        self.world.add_obj(sphere2)
+        self.world.add_obj(sphere3)
 
         self.world.setup()
 
@@ -99,3 +136,15 @@ class IngameScene(Scene):
             else:
                 self.canvas.check_event(event)
         return False
+
+    def tick(self, screen) -> bool:
+        self.camera.move_to_absloute_pos(
+            self.camera.pos.x - 0.01 * self.context.game_state.current_delta,
+            self.camera.pos.y - 0.01 * self.context.game_state.current_delta,
+            self.camera.pos.z + 0.01 * self.context.game_state.current_delta,
+        )
+
+        self.camera.rotation_horizontal(0.01* self.context.game_state.current_delta,
+                                        True, e3rotation=True)
+
+        return super().tick(screen)
